@@ -4,6 +4,12 @@ LIBS = -lev3dev-c
 CFLAGS = -c -g
 WARNINGS = -Wextra 
 
+uart: uart.o	
+	$(CC) $< $(LIBS) -o $@
+
+uart.o: uart.c
+	$(CC) $(CFLAGS) $< -o $@
+
 motor: motor.o
 	$(CC) $< $(LIBS) -o $@
 

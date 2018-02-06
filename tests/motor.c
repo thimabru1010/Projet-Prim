@@ -32,6 +32,7 @@ int main(void)
 		tacho_set_command( MOTOR_BOTH, TACHO_RUN_FOREVER );
 		tacho_run_forever( MOTOR_BOTH );
 		Sleep(4000);
+		tacho_stop( MOTOR_BOTH );
 	}
 	return 0;
 }
