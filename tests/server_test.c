@@ -1,38 +1,89 @@
 #include <stdio.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <string.h>
+#include <stdlib.h>
+#define PORT 22
 
-struct in_addr {
+/*
+typedef struct sockaddr {
+	unsigned short sa_family;
+	char sa_data[14];
+} Sockaddr;
+
+ typedef struct in_addr {
 	unsigned long s_addr;
-}
-struct sockaddr_in {
+} In_addr;
+
+typedef struct sockaddr_in {
 	unsigned short sin_family;
 	unsigned short sin_port;
 	struct in_addr sin_addr;
 	char sin_zero[8];
-}
+} Sockaddr_in;
+*/
+
+typedef struct sockaddr Sockaddr;
+typedef struct in_addr In_addr;
+typedef struct sockaddr_in Sockaddr_in;
 
 int main(void)
 {
-	int sock_id, status;
+	int sock_server, status, valread;
+	char buffer[1024] = {0};
+	char *hello = "Hello from server";
 	struct sockaddr_in address;
 
-	// Why use PF_INET and not AF_INET ?
-	if( (sock_id = socket( AF_INET, SOCK_STREAM, 0)) < 0)
+	// Socket creation
+	if( (sock_server = socket( AF_INET, SOCK_STREAM, 0)) < 0)
 	{
-		printf("Socket failed \n");
+		printf("Socket server failed \n");
 		exit(1);
 	}
 	address.sin_family = AF_INET;
 	address.sin_addr.s_addr = INADDR_ANY;
-	address.sin_port = ;
-	if( (status = bind(sock_id, &address, sizeof(address)) < 0)
+	//Default port for ssh
+	address.sin_port = htons(PORT) ;
+
+	// Assign adress to the socket
+	if( (status = bind(sock_server, &address, sizeof(address))) < 0  )
 	{
 		printf("Bind failed");
 		exit(1);
 	}
-		
 
-	status = close(sock_id);
+	status = listen(sock_server, 2);
+	if( status < 0 )
+	{
+		printf("Listen failed");
+		exit(1);
+	}	
+
+	// Accept Connection
+	Sockaddr foreignAddr;
+	status = accept(sock_server, &address, sizeof(address));
+	if( status < 0 )
+	{
+		printf("Accpetion failed");
+		exit(1);
+	}
+
+	valread = read(status, buffer, 1024);
+	printf("%s\n", buffer );
+	send(status, hello, strlen(hello), 0);
+	
+	
+/*	// Exchange data with stream Socket
+	const void[] msg;
+	void[] recvBuf;
+	int flag1, flag2;
+	int count1, count2; 
+	count1 = sendto(sock_id, msg, sizeof(msg), flag1);
+	count2 = recvfrom(sock_id, recvBuf, sizeof(recvBuf), flag2);
+*/	 
+
+	// CLosing the socket
+	status = close(sock_server);
+
 	return 0;
 }

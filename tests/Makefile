@@ -2,8 +2,20 @@
 CC = gcc
 LIBS = -lev3dev-c
 CFLAGS = -c -g
-WARNINGS = -Wextra 
+WARNINGS = -Wextra
 
+client: client_test.o
+	$(CC) $< $(LIBS) -o $@
+
+client_test.o: client_test.c
+	$(CC) $(CFLAGS) $< -o $@
+
+endian: endian_test.o
+	$(CC) $< $(LIBS) -o $@
+
+endian_test.o: endian_test.c
+	$(CC) $(CFLAGS) $< -o $@
+	
 uart: uart.o	
 	$(CC) $< $(LIBS) -o $@
 
