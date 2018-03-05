@@ -3,7 +3,6 @@
 #include <netinet/in.h>
 #include <string.h>
 #include <stdlib.h>
-#include <
 #define PORT 22
 
 /*
@@ -51,7 +50,7 @@ int main(void)
 	if( status < 0 )
 	{
 		printf("Bind failed \n");
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 
 	status = listen(sock_server, 2);
