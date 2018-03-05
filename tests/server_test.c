@@ -3,6 +3,7 @@
 #include <netinet/in.h>
 #include <string.h>
 #include <stdlib.h>
+#include <
 #define PORT 22
 
 /*
@@ -32,7 +33,7 @@ int main(void)
 	int sock_server, status, valread;
 	char buffer[1024] = {0};
 	char *hello = "Hello from server";
-	struct sockaddr_in address;
+	Sockaddr_in address;
 
 	// Socket creation
 	if( (sock_server = socket( AF_INET, SOCK_STREAM, 0)) < 0)
@@ -41,30 +42,31 @@ int main(void)
 		exit(1);
 	}
 	address.sin_family = AF_INET;
-	address.sin_addr.s_addr = INADDR_ANY;
+	address.sin_addr.s_addr = inet_addr("192.168.0.106"); //INADDR_ANY before
 	//Default port for ssh
 	address.sin_port = htons(PORT) ;
 
 	// Assign adress to the socket
-	if( (status = bind(sock_server, &address, sizeof(address))) < 0  )
+	status = bind(sock_server, (Sockaddr *)&address, sizeof(address));
+	if( status < 0 )
 	{
-		printf("Bind failed");
+		printf("Bind failed \n");
 		exit(1);
 	}
 
 	status = listen(sock_server, 2);
 	if( status < 0 )
 	{
-		printf("Listen failed");
+		printf("Listen failed \n");
 		exit(1);
 	}	
 
 	// Accept Connection
 	Sockaddr foreignAddr;
-	status = accept(sock_server, &address, sizeof(address));
+	status = accept(sock_server, (Sockaddr *)&address, (socklen_t*)sizeof(address));
 	if( status < 0 )
 	{
-		printf("Accpetion failed");
+		printf("Accpetion failed \n");
 		exit(1);
 	}
 
