@@ -36,23 +36,26 @@ int main(void)
 		// No need to set a command
 //		tacho_set_command( MOTOR_BOTH, TACHO_RUN_FOREVER );
 		//Makes the robot runs forever
+		printf("Run forever running...\n");
 		tacho_run_forever( MOTOR_BOTH );
-		Sleep(4000);
+		Sleep(2000);
 		// The speed of the motor don't changes while he is running
 		speed_linear = max_speed_left * 70 / 100;
 		tacho_stop( MOTOR_BOTH );
 		printf("Waiting... \n");
-		Sleep(4000);
+		Sleep(2000);
+		// But with duty_cycle it's possible to change the speed
 		duty_cycle_flag = tacho_set_duty_cycle_sp( MOTOR_BOTH, 20);
 		if( duty_cycle_flag == true )
 		{
 			tacho_run_direct(MOTOR_BOTH);
-			Sleep(4000);
+			Sleep(2000);
 			tacho_set_duty_cycle_sp(MOTOR_BOTH, 70);
 			printf("Duty cycle running...\n");
-			Sleep(4000);
+			Sleep(2000);
 			tacho_stop(MOTOR_BOTH);
 		}
+		// Makes the car run during a time with specific speed
 		time_flag = tacho_set_time_sp( MOTOR_BOTH, 4000);
 		speed_flag = tacho_set_speed_sp(MOTOR_BOTH, max_speed_left);
 		if( time_flag == true && speed_flag == true)
@@ -60,14 +63,17 @@ int main(void)
 			printf("Run timed running... \n");
 			tacho_run_timed(MOTOR_BOTH);
 		}
+		// Makes the car run determinated meters 
 		meters = tacho_get_count_per_rot(MOTOR_RIGHT, 1);
 		printf("Meters: %d \n", meters);
 		tacho_set_position_sp(MOTOR_BOTH, meters);
-		Sleep(4000);
+		Sleep(2000);
 		abs_flag = tacho_run_to_abs_pos(MOTOR_BOTH);
 		if( abs_flag == true )
 			printf("Abs pos running... \n");
-		tacho_set_stop_action_break(MOTOR_BOTH);
+		Sleep(2000);
+		tacho_set_stop_action_coast(MOTOR_BOTH);
+		tacho_stop(MOTOR_BOTH);
 	}
 	return 0;
 }
