@@ -3,8 +3,24 @@ CC = gcc
 LIBS = -lev3dev-c
 CFLAGS = -c -g
 WARNINGS = -Wextra
+TARGET_EV3 = light sensor motor uart client
+EXECS= $(TARGET_EV3: *.*=.exe)
 
-client: client_test.o
+all: $(EXECS)
+	
+$(EXECS): $(TARGET_EV3).o
+	$(CC) $< $(LIBS) -o $@
+
+$(TARGET_EV3).o: $(TARGET_EV3).c
+	$(CC) $(CFLAGS) $< -o $@
+
+serve: server.o
+	$(CC) $< $(LIBS) -o $@
+
+server.o: server.c
+	$(CC) $(CFLAGS) $< -o $@
+
+client: client.o
 	$(CC) $< $(LIBS) -o $@
 
 client_test.o: client_test.c
@@ -39,6 +55,8 @@ light: light.o
 
 light.o: light.c
 	$(CC) $(CFLAGS) $< -o $@
+
+.PHONY: ssh clean
 
 ssh:
 	ssh robot@ev3dev.local
