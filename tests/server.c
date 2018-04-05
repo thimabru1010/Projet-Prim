@@ -19,6 +19,7 @@ int main(void)
 	int opt = 1;
 	char buffer[1024] = {0};
 	char *hello = "Hello from server";
+	int data_message[] = {10, 4444};
 	Sockaddr_in address;
 
 	// Socket creation
@@ -68,10 +69,13 @@ int main(void)
 	  printf("Acceptation failed with status %s\n", strerror(errno));
 	  exit(EXIT_FAILURE);
 	}
-
+	
+	// Receive data from client
 	valread = read(status, buffer, 1024);
 	printf("%s\n", buffer );
-	send(status, hello, strlen(hello), 0);
+
+	// Send data to client
+	send(status, data_message, 2*sizeof(int), 0);
 	
 	
 /*	// Exchange data with stream Socket

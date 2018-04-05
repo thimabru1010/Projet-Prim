@@ -16,6 +16,7 @@ int main(void)
 {
 	char *hello = "Hello from client";
 	char buffer[1024] = {0};
+	int int_buffer[2];
 	int sock_client, valread;
 	Sockaddr_in serv_addr; 
 	// Creates the socket
@@ -40,16 +41,24 @@ int main(void)
 	}
 
 	// Make the connection with the server
-	if( ( connect(sock_client, &serv_addr, sizeof(serv_addr)) ) < 0 )
+	if( ( connect(sock_client,  (struct sockaddr *)&serv_addr, sizeof(serv_addr)) ) < 0 )
 	{
 		perror("connect");
 		exit(EXIT_FAILURE);
 	}
-
+	
+	// Send data to the server
 	send(sock_client, hello, strlen(hello), 0);
 	printf("Hello Message sent \n");
-	valread = read( sock_client, buffer, 1024);
-	printf("%s\n", buffer);
+
+	// Receive data from the server
+	valread = read( sock_client, int_buffer, 1024);
+	if( valread < 0 )
+	{
+		perror("read");
+		exit(EXIT_FAILURE);
+	}
+	printf("%d \t %d\n", int_buffer[0], int_buffer[1]);
 	close(sock_client);
 
 

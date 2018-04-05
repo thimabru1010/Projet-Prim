@@ -14,13 +14,13 @@ ev3: $(EXECS_EV3)
 	$(CC) $(CFLAGS) $< -o $@
 
 server.exe: server.o
-	$(CC) $< $(LIBS) -o $@
+	$(CC) $< -o $@
 
 server.o: server.c
 	$(CC) $(CFLAGS) $< -o $@
 
 endian.exe: endian_test.o
-	$(CC) $< $(LIBS) -o $@
+	$(CC) $< -o $@
 
 endian_test.o: endian_test.c
 	$(CC) $(CFLAGS) $< -o $@
