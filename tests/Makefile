@@ -3,7 +3,7 @@ CC = gcc
 LIBS = -lev3dev-c
 CFLAGS = -c -g
 WARNINGS = -Wextra
-EXECS_EV3 = light.exe sensor.exe motor.exe uart.exe client.exe
+EXECS_EV3 = light.exe sensor.exe motor.exe uart.exe client.exe PID.exe
 
 ev3: $(EXECS_EV3)
 	
