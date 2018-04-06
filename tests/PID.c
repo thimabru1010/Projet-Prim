@@ -44,7 +44,7 @@ int main(void)
 		max_speed = tacho_get_max_speed( MOTOR_LEFT, 0 );
 		speed_linear = max_speed * SPEED_LINEAR / 100;
 		duty_cycle_flag1 = tacho_set_duty_cycle_sp( MOTOR_BOTH, speed_linear );
-		if( duty_cycle_flag == true )
+		if( duty_cycle_flag1 == true )
 		{
 			tacho_run_direct(MOTOR_BOTH);
 		}
