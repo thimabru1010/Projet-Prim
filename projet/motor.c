@@ -33,8 +33,10 @@ int main(void)
 		//a small number to make the car runs slower.
 		speed_linear = max_speed_left * SPEED_LINEAR / 100;
 		tacho_set_speed_sp( MOTOR_BOTH, speed_linear);
+
 		// No need to set a command
 //		tacho_set_command( MOTOR_BOTH, TACHO_RUN_FOREVER );
+
 		//Makes the robot runs forever
 		printf("Run forever running...\n");
 		tacho_run_forever( MOTOR_BOTH );
@@ -48,10 +50,13 @@ int main(void)
 		duty_cycle_flag = tacho_set_duty_cycle_sp( MOTOR_BOTH, 20);
 		if( duty_cycle_flag == true )
 		{
+			printf("Starting duty cycle...\n");
 			tacho_run_direct(MOTOR_BOTH);
 			Sleep(2000);
-			tacho_set_duty_cycle_sp(MOTOR_BOTH, 70);
-			printf("Duty cycle running...\n");
+			printf("Changing speed...\n");
+			tacho_set_duty_cycle_sp(MOTOR_RIGHT, 70);
+			tacho_set_duty_cycle_sp(MOTOR_LEFT, 30);
+			tacho_run_direct(MOTOR_BOTH);
 			Sleep(2000);
 			tacho_stop(MOTOR_BOTH);
 		}
