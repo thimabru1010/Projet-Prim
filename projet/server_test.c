@@ -1,10 +1,19 @@
-#include "server.h"
+#include <stdio.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <string.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <errno.h>
+#include <string.h>
+#define PORT 4444
 
 typedef struct sockaddr Sockaddr;
 typedef struct in_addr In_addr;
 typedef struct sockaddr_in Sockaddr_in;
 
-int create_server(void)
+int main(void)
 {
 	int sock_server, status, valread;
 	int opt = 1;
@@ -33,6 +42,7 @@ int create_server(void)
 	address.sin_port = htons(PORT) ;
 
 	// Bind: Assign adress to the socket
+	// Why can't I use my typedef?
 	status = bind(sock_server, (const struct sockaddr *)&address, sizeof(address));
 	if( status < 0 )
 	{
@@ -51,16 +61,15 @@ int create_server(void)
 
 	// Accept Connection
 	Sockaddr foreignAddr;
+	// why don't need to cast with socklen_t* ?
 	int cli_len = sizeof(address);
 	status = accept(sock_server, (Sockaddr *)&address, &cli_len);
 	if( status < 0 )
 	{
-	  perror("accept");
+	  printf("Acceptation failed with status %s\n", strerror(errno));
 	  exit(EXIT_FAILURE);
 	}
-}
-
-	// Send and receive the data on the main
+	
 	// Receive data from client
 	valread = read(status, buffer, 1024);
 	printf("%s\n", buffer );
@@ -82,6 +91,6 @@ int create_server(void)
 	status = close(sock_server);
 
 	return 0;
-
+}
 
 
