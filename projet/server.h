@@ -11,6 +11,6 @@
 
 // Creates the socket. Makes de Bind. Accept connection from client.
 // Returns the socket server
-int establish_connection(void);
+int establish_server_connection(void);
 
 

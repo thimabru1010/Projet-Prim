@@ -1,26 +1,15 @@
-#include <stdio.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <string.h>
-#include <stdlib.h>
-#include <errno.h>
-#include <unistd.h>
-#define PORT 4444
-#include <pthread.h>
+#include "client.h"
 
 typedef struct sockaddr Sockaddr;
 typedef struct in_addr In_addr;
 typedef struct sockaddr_in Sockaddr_in;
 
-int main(void)
+int establish_client_connection(void)
 {
-	char *hello = "Hello from client";
-	char buffer[1024] = {0};
-	int int_buffer[2];
-	int sock_client, valread;
-	Sockaddr_in serv_addr; 
-	// Creates the socket
+	int sock_client;
+	Sockaddr_in serv_addr;
+
+	// Creates client socket
 	sock_client = socket(AF_INET, SOCK_STREAM, 0);
 	if( sock_client < 0 )
 	{
@@ -47,21 +36,8 @@ int main(void)
 		perror("connect");
 		exit(EXIT_FAILURE);
 	}
-	
-	// Send data to the server
-	send(sock_client, hello, strlen(hello), 0);
-	printf("Hello Message sent \n");
 
-	// Receive data from the server
-	valread = read( sock_client, int_buffer, 1024);
-	if( valread < 0 )
-	{
-		perror("read");
-		exit(EXIT_FAILURE);
-	}
-	printf("%d \t %d\n", int_buffer[0], int_buffer[1]);
-	close(sock_client);
-
-
-	return 0;
+	return sock_client;
 }
+	
+
