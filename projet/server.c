@@ -4,13 +4,9 @@ typedef struct sockaddr Sockaddr;
 typedef struct in_addr In_addr;
 typedef struct sockaddr_in Sockaddr_in;
 
-int create_server(void)
+int estabiish_connection(void)
 {
-	int sock_server, status, valread;
-	int opt = 1;
-	char buffer[1024] = {0};
-	char *hello = "Hello from server";
-	int data_message[] = {10, 4444};
+	int sock_server, status, opt =1;
 	Sockaddr_in address;
 
 	// Socket creation
@@ -33,6 +29,7 @@ int create_server(void)
 	address.sin_port = htons(PORT) ;
 
 	// Bind: Assign adress to the socket
+	// Why can't I use my typedef?
 	status = bind(sock_server, (const struct sockaddr *)&address, sizeof(address));
 	if( status < 0 )
 	{
@@ -52,36 +49,15 @@ int create_server(void)
 	// Accept Connection
 	Sockaddr foreignAddr;
 	int cli_len = sizeof(address);
+
 	status = accept(sock_server, (Sockaddr *)&address, &cli_len);
 	if( status < 0 )
 	{
-	  perror("accept");
+	  printf("Acceptation failed with status %s\n", strerror(errno));
 	  exit(EXIT_FAILURE);
 	}
+	
+	return sock_server;
 }
-
-	// Send and receive the data on the main
-	// Receive data from client
-	valread = read(status, buffer, 1024);
-	printf("%s\n", buffer );
-
-	// Send data to client
-	send(status, data_message, 2*sizeof(int), 0);
-	
-	
-/*	// Exchange data with stream Socket
-	const void[] msg;
-	void[] recvBuf;
-	int flag1, flag2;
-	int count1, count2; 
-	count1 = sendto(sock_id, msg, sizeof(msg), flag1);
-	count2 = recvfrom(sock_id, recvBuf, sizeof(recvBuf), flag2);
-*/	 
-
-	// CLosing the socket
-	status = close(sock_server);
-
-	return 0;
-
 
 

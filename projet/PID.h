@@ -19,8 +19,7 @@ int init_brick(void);
 POOL_T search_set_color_sensor(void);
 
 // Search the large motor. Set the duty cycle sp mode for the motor.
-// Returns true if successful 
-bool search_set_wheels(void);
+void search_set_wheels(void);
 
 // Makes de calculus of PID
 // Receives the socket of color sensor.

@@ -23,7 +23,7 @@ POOL_T search_set_color_sensor(void)
 	   printf("COLOR SENSOR NOT FOUND\n");
 }
 
-bool search_set_wheels(void)
+void search_set_wheels(void)
 {
 	POOL_T sock_tacho_motor;
 	bool duty_cycle_flag1;
@@ -36,7 +36,7 @@ bool search_set_wheels(void)
 		{
 			printf("Motor running...\n\n");
 			tacho_run_direct(MOTOR_BOTH);
-			return duty_cycle_flag1;
+return;
 		}
 	}
 	else

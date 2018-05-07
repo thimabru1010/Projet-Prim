@@ -10,7 +10,7 @@
 #define PORT 4444
 
 // Creates the socket. Makes de Bind. Accept connection from client.
-// Returns a positive number if the connection was accpeted.
-int create_server(void);
+// Returns the socket server
+int establish_connection(void);
 
 

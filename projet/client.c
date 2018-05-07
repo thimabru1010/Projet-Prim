@@ -7,6 +7,7 @@
 #include <errno.h>
 #include <unistd.h>
 #define PORT 4444
+#include <pthread.h>
 
 typedef struct sockaddr Sockaddr;
 typedef struct in_addr In_addr;
