@@ -9,8 +9,8 @@
 #define MOTOR_BOTH ( MOTOR_LEFT | MOTOR_RIGHT )
 // Percentage of max speed
 #define SPEED_LINEAR 50
-#define RED_MIN
-#define RED_MAX
+#define RED_MIN 65
+#define RED_MAX 75
 
 // Initialize the brick. Returns 1 if could'nt initialize 
 int init_brick(void);

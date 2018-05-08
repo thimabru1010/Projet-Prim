@@ -39,5 +39,4 @@ int establish_client_connection(void)
 
 	return sock_client;
 }
-	
 

@@ -3,8 +3,6 @@
 
 int main(void)
 {
-	char buffer[1024] = {0};
-	int int_buffer[2];
 	int status, valread, sock_client;
 	POOL_T sock_col_sensor;
 	bool red_flag;
@@ -18,7 +16,7 @@ int main(void)
 	// Making connection with server
 	sock_client = establish_client_connection();
 	
-	while(true)
+	/* while(true)
 	{
 		red_flag = calculate_pid(sock_col_sensor);
 
@@ -28,8 +26,12 @@ int main(void)
 			send(sock_client, red_flag, sizeof(bool));
 			printf("Car is on the red mark \n");
 		}
-	}
+	} */
+	
+	red_flag = true;
+	send(sock_client, (const void *) red_flag, sizeof(bool), 0);
 
+	/*
 	// Receive data from the server
 	valread = read( sock_client, int_buffer, 1024);
 	if( valread < 0 )
@@ -38,6 +40,7 @@ int main(void)
 		exit(EXIT_FAILURE);
 	}
 	printf("%d \t %d\n", int_buffer[0], int_buffer[1]);
+	*/
 
 	close(sock_client);
 	return 0;

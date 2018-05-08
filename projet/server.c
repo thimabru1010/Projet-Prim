@@ -4,9 +4,11 @@ typedef struct sockaddr Sockaddr;
 typedef struct in_addr In_addr;
 typedef struct sockaddr_in Sockaddr_in;
 
-int estabiish_connection(void)
+extern int status;
+
+int establish_server_connection(void)
 {
-	int sock_server, status, opt =1;
+	int status, sock_server, opt =1;
 	Sockaddr_in address;
 
 	// Socket creation
@@ -29,7 +31,6 @@ int estabiish_connection(void)
 	address.sin_port = htons(PORT) ;
 
 	// Bind: Assign adress to the socket
-	// Why can't I use my typedef?
 	status = bind(sock_server, (const struct sockaddr *)&address, sizeof(address));
 	if( status < 0 )
 	{
@@ -60,4 +61,16 @@ int estabiish_connection(void)
 	return sock_server;
 }
 
+void *send_data_server(void *message)
+{
+	int status;
+	bool mes;
+	mes = (bool *) message;
+	send(status, (const void *) mes, sizeof(bool), 0);
+}
 
+void receive_data_server(void *buffer)
+{
+	int val_read, status;
+	val_read = read(status, &buffer, sizeof(buffer));
+}

@@ -11,7 +11,7 @@ int init_brick(void)
 POOL_T search_set_color_sensor(void)
 {
 	ev3_sensor_init();
-	POOL_T sock_col sensor;
+	POOL_T sock_col_sensor;
 	sock_col_sensor = sensor_search( LEGO_EV3_COLOR );
     if( sock_col_sensor )
     {
@@ -43,34 +43,12 @@ return;
 		perror("tacho_search");
 }
 
-
-	float value0, target, error = 0, prop, integral = 0, derivate = 0, PID_value;
-	float last_error = 0, kp = 0.45, ki = 0.0008, kd = 0.9;
-	int duty_cycle, duty_cycle_sp;
-	bool duty_cycle_flag1, duty_cycle_flag2;
-	POOL_T sock_col_sensor, sock_tacho_motor;
-
-
-	// Remember put the initialisation and the search on the main out of the
-	// loop
-	// Setting a value for the target
-	target = 40;
-
-	// Initialize the brick and sensors
-    init_brick();
-
-	// Find and set color sensor
-    sock_col_sensor = search_set_color_sensor();
-
-	// Find and set wheels and turn on the motors
-	duty_cycle_flag1 = find_set_wheels();
-
-	
 bool calculate_pid(POOL_T sock_col_sensor)
 {
 	float value0, target, error = 0, prop, integral = 0, derivate = 0, PID_value;
 	float last_error = 0, kp = 0.45, ki = 0.0008, kd = 0.9;
 	float left_motor_speed = 0, right_motor_speed = 0;
+	int cont = 0;
 
 	value0 = sensor_get_value0( sock_col_sensor, COLOR_COL_REFLECT);
 
