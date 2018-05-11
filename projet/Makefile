@@ -4,7 +4,7 @@ EV3_LIBS = -lev3dev-c
 PTHREAD_LIB = -lpthread
 CFLAGS = -c -g
 WARNINGS = -Wextra
-EXECS_EV3 = light.exe sensor.exe motor.exe uart.exe client_test.exe PID.exe
+EXECS_EV3 = light.exe sensor.exe motor.exe uart.exe client1_test.exe
 
 # ------------------------------------------------
 
@@ -16,11 +16,18 @@ ev3: $(EXECS_EV3)
 %.o: %.c
 	$(CC) $(CFLAGS) $< -o $@
 
-server.exe: server.o
+server_test.exe: server_test.o
 	$(CC) $< -o $@
 
-server.o: server.c
+server_test.o: server_test.c
 	$(CC) $(CFLAGS) $< -o $@
+
+client2_test.exe: client2_test.o
+	$(CC) $< -o $@
+
+client2_test.o: client2_test.c
+	$(CC) $(CFLAGS) $< -o $@
+
 
 endian.exe: endian_test.o
 	$(CC) $< -o $@

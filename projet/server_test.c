@@ -15,43 +15,46 @@ typedef struct sockaddr_in Sockaddr_in;
 
 int main(void)
 {
-	int sock_server, status, valread;
+	int sock1_server, status1, valread, sock2_server, status2;
 	int opt = 1;
 	char buffer[1024] = {0};
 	char *hello = "Hello from server";
 	int data_message[] = {10, 4444};
-	Sockaddr_in address;
+	Sockaddr_in address1, address2;
+	char *client1_ip = "192.168.0.105";
+	char *client2_ip = "";
+
+	// Client 1 connection ----------------------------------------------
+
 
 	// Socket creation
-	if( (sock_server = socket( AF_INET, SOCK_STREAM, 0)) < 0)
+	if( (sock1_server = socket( AF_INET, SOCK_STREAM, 0)) < 0)
 	{
 		perror("socket");
 		exit(EXIT_FAILURE);
 	}
 
-	// Avoid bind error: address already in use
-	if( setsockopt( sock_server, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt) ) )
+	// Avoid bind error: address1 already in use
+	if( setsockopt( sock1_server, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt) ) )
 	{
 		perror("setsockspot");
 		exit(EXIT_FAILURE);
 	}
 
-	address.sin_family = AF_INET;
-	address.sin_addr.s_addr = inet_addr("192.168.0.105"); //INADDR_ANY before
-	//Default port for ssh
-	address.sin_port = htons(PORT) ;
+	address1.sin_family = AF_INET;
+	address1.sin_addr.s_addr = inet_addr(client1_ip); //INADDR_ANY before
+	address1.sin_port = htons(PORT) ;
 
 	// Bind: Assign adress to the socket
-	// Why can't I use my typedef?
-	status = bind(sock_server, (const struct sockaddr *)&address, sizeof(address));
-	if( status < 0 )
+	status1 = bind(sock1_server, (const struct sockaddr *)&address1, sizeof(address1));
+	if( status1 < 0 )
 	{
 		perror("bind");
 		exit(EXIT_FAILURE);
 	}
 
-	status = listen(sock_server, 3);
-	if( status < 0 )
+	status1 = listen(sock1_server, 3);
+	if( status1 < 0 )
 	{
 		perror("listen");
 		exit(EXIT_FAILURE);
@@ -61,34 +64,88 @@ int main(void)
 
 	// Accept Connection
 	Sockaddr foreignAddr;
-	// why don't need to cast with socklen_t* ?
-	int cli_len = sizeof(address);
-	status = accept(sock_server, (Sockaddr *)&address, &cli_len);
-	if( status < 0 )
+	int cli_len = sizeof(address1);
+	status1 = accept(sock1_server, (Sockaddr *)&address1, &cli_len);
+	if( status1 < 0 )
 	{
-	  printf("Acceptation failed with status %s\n", strerror(errno));
+	  printf("Acceptation failed with status1 %s\n", strerror(errno));
 	  exit(EXIT_FAILURE);
 	}
+	printf("Connection with client 1 made\n");
+	close(sock1_server);
+
+
+	// Client 1 connection made ----------------------------------------------
+
+
+
+
+
+	// Client 2 connection ----------------------------------------------
 	
+
+	// Socket creation
+	if( (sock2_server = socket( AF_INET, SOCK_STREAM, 0)) < 0)
+	{
+		perror("socket");
+		exit(EXIT_FAILURE);
+	}
+
+	// Avoid bind error: address1 already in use
+	if( setsockopt( sock2_server, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt) ) )
+	{
+		perror("setsockspot");
+		exit(EXIT_FAILURE);
+	}
+
+
+	address2.sin_family = AF_INET;
+	address2.sin_addr.s_addr = INADDR_ANY;
+	address2.sin_port = htons(PORT) ;
+
+	// Bind: Assign adress to the socket
+	status2 = bind(sock2_server, (const struct sockaddr *)&address2, sizeof(address2));
+	if( status2 < 0 )
+	{
+		perror("bind");
+		exit(EXIT_FAILURE);
+	}
+
+	status2 = listen(sock2_server, 3);
+	if( status2 < 0 )
+	{
+		perror("listen");
+		exit(EXIT_FAILURE);
+	}
+	else
+		printf("Waiting connection from a client...\n");	
+
+	// Accept Connection
+	int cli_len2 = sizeof(address2);
+	status2 = accept(sock2_server, (Sockaddr *)&address2, &cli_len2);
+	if( status2 < 0 )
+	{
+	  printf("Acceptation failed with status2 %s\n", strerror(errno));
+	  exit(EXIT_FAILURE);
+	}
+	printf("Connection with client 2 made\n");
+	close(sock2_server);
+
+	// Client 2 connection made ----------------------------------------------
+
+	return 0;
+
 	// Receive data from client
-	valread = read(status, buffer, 1024);
+	valread = read(status1, buffer, 1024);
 	printf("%s\n", buffer );
 
 	// Send data to client
-	send(status, data_message, 2*sizeof(int), 0);
+	send(status1, data_message, 2*sizeof(int), 0);
 	
 	
-/*	// Exchange data with stream Socket
-	const void[] msg;
-	void[] recvBuf;
-	int flag1, flag2;
-	int count1, count2; 
-	count1 = sendto(sock_id, msg, sizeof(msg), flag1);
-	count2 = recvfrom(sock_id, recvBuf, sizeof(recvBuf), flag2);
-*/	 
 
 	// CLosing the socket
-	status = close(sock_server);
+	status2 = close(sock1_server);
 
 	return 0;
 }
