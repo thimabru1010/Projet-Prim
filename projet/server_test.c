@@ -7,7 +7,8 @@
 #include <unistd.h>
 #include <errno.h>
 #include <string.h>
-#define PORT 4444
+#define PORT1 4444
+#define PORT2 8080
 
 typedef struct sockaddr Sockaddr;
 typedef struct in_addr In_addr;
@@ -43,7 +44,7 @@ int main(void)
 
 	address1.sin_family = AF_INET;
 	address1.sin_addr.s_addr = inet_addr(client1_ip); //INADDR_ANY before
-	address1.sin_port = htons(PORT) ;
+	address1.sin_port = htons(PORT1) ;
 
 	// Bind: Assign adress to the socket
 	status1 = bind(sock1_server, (const struct sockaddr *)&address1, sizeof(address1));
@@ -60,31 +61,9 @@ int main(void)
 		exit(EXIT_FAILURE);
 	}
 	else
-		printf("Waiting connection from a client...\n");	
+		printf("Waiting connection from a client1...\n");	
 
-	// Accept Connection
-	Sockaddr foreignAddr;
-	int cli_len = sizeof(address1);
-	status1 = accept(sock1_server, (Sockaddr *)&address1, &cli_len);
-	if( status1 < 0 )
-	{
-	  printf("Acceptation failed with status1 %s\n", strerror(errno));
-	  exit(EXIT_FAILURE);
-	}
-	printf("Connection with client 1 made\n");
-	close(sock1_server);
-
-
-	// Client 1 connection made ----------------------------------------------
-
-
-
-
-
-	// Client 2 connection ----------------------------------------------
-	
-
-	// Socket creation
+	// Socket 2 creation
 	if( (sock2_server = socket( AF_INET, SOCK_STREAM, 0)) < 0)
 	{
 		perror("socket");
@@ -101,7 +80,69 @@ int main(void)
 
 	address2.sin_family = AF_INET;
 	address2.sin_addr.s_addr = INADDR_ANY;
-	address2.sin_port = htons(PORT) ;
+	address2.sin_port = htons(PORT2) ;
+
+	// Bind: Assign adress to the socket
+	status2 = bind(sock2_server, (const struct sockaddr *)&address2, sizeof(address2));
+	if( status2 < 0 )
+	{
+		perror("bind");
+		exit(EXIT_FAILURE);
+	}
+
+	status2 = listen(sock2_server, 3);
+	if( status2 < 0 )
+	{
+		perror("listen");
+		exit(EXIT_FAILURE);
+	}
+	else
+		printf("Waiting connection from a client2...\n");	
+
+
+
+
+
+	// Accept Connection from client 1
+	Sockaddr foreignAddr;
+	int cli_len = sizeof(address1);
+	status1 = accept(sock1_server, (Sockaddr *)&address1, &cli_len);
+	if( status1 < 0 )
+	{
+	  printf("Acceptation failed with status1 %s\n", strerror(errno));
+	  exit(EXIT_FAILURE);
+	}
+	printf("Connection with client 1 made\n");
+	close(sock1_server);
+
+	
+	// Client 1 connection made ----------------------------------------------
+
+
+
+
+
+	// Client 2 connection ----------------------------------------------
+	
+/*
+	// Socket creation
+	if( (sock2_server = socket( AF_INET, SOCK_STREAM, 0)) < 0)
+	{
+		perror("socket");
+		exit(EXIT_FAILURE);
+	}
+
+	// Avoid bind error: address1 already in use
+	if( setsockopt( sock2_server, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT1, &opt, sizeof(opt) ) )
+	{
+		perror("setsockspot");
+		exit(EXIT_FAILURE);
+	}
+
+
+	address2.sin_family = AF_INET;
+	address2.sin_addr.s_addr = INADDR_ANY;
+	address2.sin_port = htons(PORT2) ;
 
 	// Bind: Assign adress to the socket
 	status2 = bind(sock2_server, (const struct sockaddr *)&address2, sizeof(address2));
@@ -119,8 +160,9 @@ int main(void)
 	}
 	else
 		printf("Waiting connection from a client...\n");	
-
-	// Accept Connection
+*/
+	// Accept Connection from client 2
+	
 	int cli_len2 = sizeof(address2);
 	status2 = accept(sock2_server, (Sockaddr *)&address2, &cli_len2);
 	if( status2 < 0 )
@@ -133,11 +175,17 @@ int main(void)
 
 	// Client 2 connection made ----------------------------------------------
 
-	return 0;
-
-	// Receive data from client
+	// Receive data from client 1
 	valread = read(status1, buffer, 1024);
 	printf("%s\n", buffer );
+
+	// Receive data from client 2
+	valread = read(status2, buffer, 1024);
+	printf("%s\n", buffer );
+
+	close(sock1_server);
+	close(sock2_server);
+	return 0;
 
 	// Send data to client
 	send(status1, data_message, 2*sizeof(int), 0);

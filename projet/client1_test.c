@@ -14,7 +14,7 @@ typedef struct sockaddr_in Sockaddr_in;
 
 int main(void)
 {
-	char *hello = "Hello from client";
+	char *hello = "Hello from client 1";
 	char buffer[1024] = {0};
 	int int_buffer[2];
 	int sock_client, valread;
@@ -49,15 +49,12 @@ int main(void)
 	}
 	
 	printf("Connection with server established \n");
-	return 0;
-
-
 
 	// Send data to the server
 	send(sock_client, hello, strlen(hello), 0);
 	printf("Hello Message sent \n");
 
-	// Receive data from the server
+/*	// Receive data from the server
 	valread = read( sock_client, int_buffer, 1024);
 	if( valread < 0 )
 	{
@@ -66,7 +63,7 @@ int main(void)
 	}
 	printf("%d \t %d\n", int_buffer[0], int_buffer[1]);
 	close(sock_client);
-
+*/
 
 	return 0;
 }
