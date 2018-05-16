@@ -9,6 +9,7 @@
 #include <string.h>
 #define PORT1 4444
 #define PORT2 8080
+#include <stdbool.h>
 
 typedef struct sockaddr Sockaddr;
 typedef struct in_addr In_addr;
@@ -18,7 +19,7 @@ int main(void)
 {
 	int sock1_server, status1, valread, sock2_server, status2;
 	int opt = 1;
-	char buffer[1024] = {0};
+	char buffer1[30] = {0}, buffer2[30] = {0};
 	char *hello = "Hello from server";
 	int data_message[] = {10, 4444};
 	Sockaddr_in address1, address2;
@@ -43,7 +44,7 @@ int main(void)
 	}
 
 	address1.sin_family = AF_INET;
-	address1.sin_addr.s_addr = inet_addr(client1_ip); //INADDR_ANY before
+	address1.sin_addr.s_addr = inet_addr(client1_ip); 
 	address1.sin_port = htons(PORT1) ;
 
 	// Bind: Assign adress to the socket
@@ -65,6 +66,19 @@ int main(void)
 
 	// Client 2 connection ----------------------------------
 	
+	// Accept Connection from client 1 ----------------------------------------
+	
+	Sockaddr foreignAddr;
+	int cli_len = sizeof(address1);
+	status1 = accept(sock1_server, (Sockaddr *)&address1, &cli_len);
+	if( status1 < 0 )
+	{
+	  printf("Acceptation failed with status1 %s\n", strerror(errno));
+	  exit(EXIT_FAILURE);
+	}
+	printf("Connection with client 1 made\n");
+
+
 	// Socket 2 creation
 	if( (sock2_server = socket( AF_INET, SOCK_STREAM, 0)) < 0)
 	{
@@ -103,10 +117,9 @@ int main(void)
 
 
 
-
 	// Accept Connection from client 1 ----------------------------------------
 	
-	Sockaddr foreignAddr;
+/*	Sockaddr foreignAddr;
 	int cli_len = sizeof(address1);
 	status1 = accept(sock1_server, (Sockaddr *)&address1, &cli_len);
 	if( status1 < 0 )
@@ -115,13 +128,11 @@ int main(void)
 	  exit(EXIT_FAILURE);
 	}
 	printf("Connection with client 1 made\n");
-	close(sock1_server);
-
+*/
 	
 	// Client 1 connection made ----------------------------------------------
 
-
-	// Accept Connection from client 2 ----------------------------------------
+		// Accept Connection from client 2 ----------------------------------------
 	
 	int cli_len2 = sizeof(address2);
 	status2 = accept(sock2_server, (Sockaddr *)&address2, &cli_len2);
@@ -131,25 +142,20 @@ int main(void)
 	  exit(EXIT_FAILURE);
 	}
 	printf("Connection with client 2 made\n");
-	close(sock2_server);
 
 	// Client 2 connection made ----------------------------------------------
 
 
+		// Receive data from client 1
+		valread = read(status1, buffer1, 1024);
+		printf("%s\n", buffer1 );
 
-
-	// Receive data from client 1
-	
-	valread = read(status1, buffer, 1024);
-	printf("%s\n", buffer );
-
-	// Receive data from client 2
-	valread = read(status2, buffer, 1024);
-	printf("%s\n", buffer );
+		// Receive data from client 2
+		valread = read(status2, buffer2, 1024);
+		printf("%s\n", buffer2);
 
 	close(sock1_server);
 	close(sock2_server);
 	return 0;
 }
-
 

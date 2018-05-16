@@ -7,6 +7,7 @@
 #include <errno.h>
 #include <unistd.h>
 #define PORT 4444
+#include <stdbool.h>
 
 typedef struct sockaddr Sockaddr;
 typedef struct in_addr In_addr;
@@ -49,10 +50,20 @@ int main(void)
 	}
 	
 	printf("Connection with server established \n");
+	
+	int button;
+	char *hello2 = "Hello 2 from client 1";
+		
+	printf("Press a number\n");
+	scanf("%d", &button);
+	if( button == 1 )
+	{
+		// Send data to the server
+		send(sock_client, hello, strlen(hello), 0);
+		printf("Hello Message sent \n");
+	}
 
-	// Send data to the server
-	send(sock_client, hello, strlen(hello), 0);
-	printf("Hello Message sent \n");
+
 
 /*	// Receive data from the server
 	valread = read( sock_client, int_buffer, 1024);
