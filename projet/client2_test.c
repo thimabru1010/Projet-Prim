@@ -54,14 +54,9 @@ int main(void)
 	int button;
 	char *hello2 = "Hello 2 from client 2";
 		
-	printf("Press a number \n");
-	scanf("%d", &button);
-	if( button == 1 )
-	{
 	// Send data to the server
 	send(sock_client, hello, strlen(hello), 0);
 	printf("Hello Message sent \n");
-	}
 	
 
 
