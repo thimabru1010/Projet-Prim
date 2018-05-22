@@ -6,7 +6,7 @@ typedef struct sockaddr_in Sockaddr_in;
 
 extern int status;
 
-int establish_server_connection(void)
+int establish_server_connection(char *client_ip, int port, int *status)
 {
 	int status, sock_server, opt =1;
 	Sockaddr_in address;
@@ -26,9 +26,8 @@ int establish_server_connection(void)
 	}
 
 	address.sin_family = AF_INET;
-	address.sin_addr.s_addr = inet_addr("192.168.0.105"); //INADDR_ANY before
-	//Default port for ssh
-	address.sin_port = htons(PORT) ;
+	address.sin_addr.s_addr = inet_addr(client_ip);
+	address.sin_port = htons(port);
 
 	// Bind: Assign adress to the socket
 	status = bind(sock_server, (const struct sockaddr *)&address, sizeof(address));
@@ -61,16 +60,20 @@ int establish_server_connection(void)
 	return sock_server;
 }
 
-void *send_data_server(void *message)
+void *thread_send_recv(void *red_flag)
 {
 	int status;
-	bool mes;
-	mes = (bool *) message;
-	send(status, (const void *) mes, sizeof(bool), 0);
+	pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
+	send(status, (const void *) message, sizeof(message), 0);
+	while(true)
+	{
+		read(status, &red_flag, sizeof(red_flag));
+		pthread_mutex_lock(&lock);
+		if( *red_flag == true )
+			send(status, (const void *) red_flag, sizeof(red_flag), 0);
+		else
+			send(status, (const void *) red_flag, sizeof(red_flag), 0);
+		pthread_mutex_unlock(&lock);
+	}
 }
 
-void receive_data_server(void *buffer)
-{
-	int val_read, status;
-	val_read = read(status, &buffer, sizeof(buffer));
-}
