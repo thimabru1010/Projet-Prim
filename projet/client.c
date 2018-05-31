@@ -4,7 +4,7 @@ typedef struct sockaddr Sockaddr;
 typedef struct in_addr In_addr;
 typedef struct sockaddr_in Sockaddr_in;
 
-int establish_client_connection(void)
+int establish_client_connection(char *car_ip)
 {
 	int sock_client;
 	Sockaddr_in serv_addr;
@@ -24,7 +24,7 @@ int establish_client_connection(void)
 	serv_addr.sin_port = htons(PORT);
 
 	// Convert IPv4 and IPv6 to addresses from text to binary
-	if(  inet_pton(AF_INET, "192.168.0.105", &serv_addr.sin_addr) <= 0 )
+	if(  inet_pton(AF_INET, car_ip, &serv_addr.sin_addr) <= 0 )
 	{
 		printf("\nInvalid address/ Address not supported");
 		return -1;

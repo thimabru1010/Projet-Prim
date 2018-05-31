@@ -8,7 +8,14 @@
 #include <errno.h>
 #include <string.h>
 #include <stdbool.h>
-#define PORT 4444
+#define PORT1 4444
+#define PORT2 8080
+
+struct message
+{
+	bool flag;
+	char *car_ip;
+};
 
 // Creates the socket. Makes de Bind. Accept connection from client.
 // Returns the socket server

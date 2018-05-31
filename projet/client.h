@@ -8,6 +8,6 @@
 #include <unistd.h>
 #define PORT 4444
 
-int establish_client_connection(void);
+int establish_client_connection(char *car_ip);
 
 

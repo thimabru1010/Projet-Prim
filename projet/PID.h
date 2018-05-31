@@ -24,7 +24,7 @@ void search_set_wheels(void);
 // Makes de calculus of PID
 // Receives the socket of color sensor.
 // Returns true if the sensor finds the red color, otherwise if not.
-bool calculate_pid(POOL_T sock_col_sensor);
+bool calculate_run_pid(POOL_T sock_col_sensor);
 
 
 
