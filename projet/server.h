@@ -8,6 +8,7 @@
 #include <errno.h>
 #include <string.h>
 #include <stdbool.h>
+#include <pthread.h>
 #define PORT1 4444
 #define PORT2 8080
 
@@ -19,10 +20,7 @@ struct message
 
 // Creates the socket. Makes de Bind. Accept connection from client.
 // Returns the socket server
-int establish_server_connection(void);
+int establish_server_connection(char *client_ip, int port);
 
-// Sends data from server to client
-void *send_data_server(void* message);
-
-// Receive data from client
-void receive_data_server(void* buffer);
+// Function to be used for the threads. Change data with client
+void *thread_send_recv(void *message_arg);

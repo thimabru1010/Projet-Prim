@@ -60,13 +60,15 @@ int establish_server_connection(char *client_ip, int port)
 	return sock_server;
 }
 
-void *thread_send_recv(void *message_red)
+void *thread_send_recv(void *message_arg)
 {
 	// variables flag's indicates if it's possible to enter on the critical
 	// section
-	struct message  message_cs;
-	message_cs.flag = true;
-	message_cs.car_ip = "no address";
+	struct message *message_red = (struct message*) message_arg;
+	struct message  *message_cs;
+	message_cs->flag = true;
+	message_cs->car_ip = "no address";
+	bool buffer;
 
 	int status;
 	pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
@@ -75,18 +77,19 @@ void *thread_send_recv(void *message_red)
 	{
 		// red_flag = true if the car entered in the cs and false if exited
 		// read too from which car the signals cames from
-		read(status, message_red.flag, sizeof(message_red));
+		read(status, (void *) buffer, sizeof(buffer));
+		message_red->flag = buffer;
 
 		pthread_mutex_lock(&lock);
-		if( *message_red.flag == true && message_cs.flag == true )
+		if( message_red->flag == true && message_cs->flag == true )
 		{
-			message_cs.flag = !message_cs.flag;
-			strcpy(message_cs->car_ip, message_red.car_ip);
+			message_cs->flag = !message_cs->flag;
+			strcpy(message_cs->car_ip, message_red->car_ip);
 		}
-		if( *message_red.flag == false && message_cs.flag == false )
+		if( message_red->flag == false && message_cs->flag == false )
 		{
-			message_cs.flag = !message_cs.flag;
-			strcpy(message_cs.car_ip, "no address");
+			message_cs->flag = !message_cs->flag;
+			strcpy(message_cs->car_ip, "no address");
 		}
 		pthread_mutex_unlock(&lock);
 

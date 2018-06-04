@@ -49,9 +49,9 @@ main_client.o: main_client.c client.h PID.h
 # ------------------------------------------------
 
 main_server: main_server.o server.o
+	$(CC) $^ $(PTHREAD_LIB) -o $@
 
 main_server.o: main_server.c server.h 
-	$(CC) $(CFLAGS) $< -o $@ $(PTHREAD_LIB) 
 
 server.o: server.c server.h
 
