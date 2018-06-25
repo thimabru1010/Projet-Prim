@@ -4,7 +4,7 @@ EV3_LIBS = -lev3dev-c
 PTHREAD_LIB = -lpthread
 CFLAGS = -c -g
 WARNINGS = -Wextra
-EXECS_EV3 = light.exe sensor.exe motor.exe uart.exe client1_test.exe
+EXECS_EV3 = light.exe sensor.exe motor.exe uart.exe client1_test.exe stop_motor.exe
 
 # ------------------------------------------------
 

@@ -35,7 +35,9 @@ int main(void)
 		perror("pthread_create");
 		exit(EXIT_FAILURE);
 	}
-*/
+*/	
+	free(message_red1);
+	free(message_red2);
 	close(sock2_server);
 	close(sock1_server);
 	return 0;

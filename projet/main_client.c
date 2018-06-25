@@ -8,7 +8,8 @@ int main(void)
 	struct message *message_cs;
 	message_cs = (struct message *) malloc(sizeof(struct message));
 	bool *red_flag;
-
+	red_flag = (bool *) malloc(sizeof(bool));
+	
 	//Change this depending on the client
 	char car_ip[14] = "192.168.0.104";
 
@@ -39,6 +40,7 @@ int main(void)
 			tacho_stop(MOTOR_BOTH);	
 	} 
 
+	free(red_flag);
 	free(message_cs);
 	close(sock_client);
 	return 0;
