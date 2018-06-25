@@ -6,10 +6,10 @@ int main(void)
 	int status, valread, sock_client;
 	POOL_T sock_col_sensor;
 	struct message message_cs;
-	bool red_flag;
+	bool *red_flag;
 
 	//Change this depending on the client
-	char car_ip[] = "192.168.0.105";
+	char car_ip[14] = "192.168.0.104";
 
 	// Initializing the brick
 	init_brick();
@@ -18,7 +18,7 @@ int main(void)
 	sock_col_sensor = search_set_color_sensor();
 
 	// Making connection with server
-	sock_client = establish_client_connection();
+	sock_client = establish_client_connection(car_ip);
 	
 	while(true)
 	{
@@ -26,7 +26,7 @@ int main(void)
 		red_flag = calculate_run_pid(sock_col_sensor);
 
 		// Warn (or not) server if red mark was found (entered on critical section)
-		send( sock_client, red_flag, sizeof(red_flag), 0 );
+		send( sock_client, (const void *) red_flag, sizeof(red_flag), 0 );
 		
 		// Receive if it's possible to enter on critical section
 		read( sock_client, message_cs, sizeof(message_cs) );

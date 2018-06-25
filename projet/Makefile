@@ -55,6 +55,12 @@ main_server.o: main_server.c server.h
 
 server.o: server.c server.h
 
+# ------------------------------------------------
+
+server_test: server_test.o
+
+server_test.o: server_test.c
+
 # ----------------------------------------------------
 .PHONY: ssh clean
 

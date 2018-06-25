@@ -23,7 +23,7 @@ int main(void)
 	char *hello = "Hello from server";
 	int data_message[] = {10, 4444};
 	Sockaddr_in address1, address2;
-	char *client1_ip = "192.168.0.105";
+	char *client1_ip = "192.168.0.104";
 	char *client2_ip = "";
 
 	// Client 1 connection ----------------------------------------------

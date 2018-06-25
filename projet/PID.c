@@ -43,7 +43,7 @@ return;
 		perror("tacho_search");
 }
 
-bool calculate__run_pid_(POOL_T sock_col_sensor)
+bool calculate_run_pid_(POOL_T sock_col_sensor)
 {
 	float value0, target, error = 0, prop, integral = 0, derivate = 0, PID_value;
 	float last_error = 0, kp = 0.45, ki = 0.0008, kd = 0.9;
