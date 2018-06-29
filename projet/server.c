@@ -23,7 +23,6 @@ int establish_server_connection(char *client_ip, int port, int *status)
 		exit(EXIT_FAILURE);
 	}
 
-	printf("%s \n", client_ip);
 	address.sin_family = AF_INET;
 	address.sin_addr.s_addr = inet_addr(client_ip);
 	address.sin_port = htons(port);
@@ -71,15 +70,16 @@ void *thread_send_recv(void *message_arg)
 	message_cs->flag = true;
 	strcpy(message_cs->car_ip, "000.000.0.000");
 	bool *buffer;
-
+	buffer = (bool *) malloc(sizeof(bool));
+	
 	pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 	
 	while(true)
 	{
 		// red_flag = true if the car entered in the cs and false if exited
 		// read too from which car the signals cames from
-		read(message_red->status, (void *) buffer, sizeof(buffer));
-		message_red->flag = *buffer;
+		read(message_red->status, (void *) buffer, sizeof(bool));
+		message_red->flag = (bool *) buffer;
 
 		pthread_mutex_lock(&lock);
 		if( message_red->flag == true && message_cs->flag == true )
@@ -89,12 +89,15 @@ void *thread_send_recv(void *message_arg)
 		}
 		if( message_red->flag == false && message_cs->flag == false )
 		{
+			printf("false \n");
 			message_cs->flag = !message_cs->flag;
 			strcpy(message_cs->car_ip, "000.000.0.000");
 		}
 		pthread_mutex_unlock(&lock);
-
+		
 		send(message_red->status, (const void *) message_cs, sizeof(message_cs), 0);
+		
 	}
+	free(buffer);
 }
 

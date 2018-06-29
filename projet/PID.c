@@ -1,4 +1,6 @@
 #include "PID.h"
+#define RED_MIN 65
+#define RED_MAX 75
 
 int init_brick(void)
 {
@@ -21,26 +23,6 @@ POOL_T search_set_color_sensor(void)
     }
     else
 	   printf("COLOR SENSOR NOT FOUND\n");
-}
-
-void search_set_wheels(void)
-{
-	POOL_T sock_tacho_motor;
-	bool duty_cycle_flag1;
-	sock_tacho_motor = tacho_search( LEGO_EV3_L_MOTOR );
-	if( sock_tacho_motor )
-	{
-		printf("Wheels motors found\n");
-		duty_cycle_flag1 = tacho_set_duty_cycle_sp( MOTOR_BOTH, SPEED_LINEAR );
-		if( duty_cycle_flag1 == true )
-		{
-			printf("Motor running...\n\n");
-			tacho_run_direct(MOTOR_BOTH);
-return;
-		}
-	}
-	else
-		perror("tacho_search");
 }
 
 bool calculate_run_pid(POOL_T sock_col_sensor)

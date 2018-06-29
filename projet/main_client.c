@@ -1,5 +1,6 @@
 #include "client.h"
 #include "PID.h"
+#include <unistd.h>
 
 int main(void)
 {
@@ -7,6 +8,7 @@ int main(void)
 	POOL_T sock_col_sensor;
 	struct message *message_cs;
 	message_cs = (struct message *) malloc(sizeof(struct message));
+	strcpy(message_cs->car_ip, "000.000.0.000");
 	bool *red_flag;
 	red_flag = (bool *) malloc(sizeof(bool));
 	
@@ -32,12 +34,13 @@ int main(void)
 		
 		// Receive if it's possible to enter on critical section
 		read( sock_client, (void *) message_cs, sizeof(message_cs) );
-		
+		printf("%s \n", message_cs->car_ip);	
 		// the car will only stop if there is someone on the critcal section
 		//  AND it's not him (check the adress) AND  just if he arrives 
 		//  on red mark, otherwise he can continue to run
 		if( message_cs->flag == false && *red_flag == true && strcmp(car_ip, message_cs->car_ip) == 0 )
-			tacho_stop(MOTOR_BOTH);	
+			tacho_stop(MOTOR_BOTH);
+		sleep(1);
 	} 
 
 	free(red_flag);

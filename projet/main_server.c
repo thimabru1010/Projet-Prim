@@ -13,7 +13,6 @@ int main(void)
 //	char *message_red2->car_ip = (char *) malloc(sizeof(" "));
 	strcpy(message_red1->car_ip, "192.168.0.104");
 	strcpy(message_red2->car_ip, "000.000.0.000");
-	printf("%s \n", message_red1->car_ip);
 	// Make connection with car 1
 	sock1_server = establish_server_connection(message_red1->car_ip, PORT1, status1);
 
@@ -28,6 +27,8 @@ int main(void)
 		perror("pthread_create");
 		exit(EXIT_FAILURE);
 	}
+	
+	pthread_join(car1_id, NULL);
 
 /*	thread_status = pthread_create( &car2_id, NULL, thread_send_recv, (void *) message_red2 );
 	if( thread_status != 0)
@@ -36,9 +37,10 @@ int main(void)
 		exit(EXIT_FAILURE);
 	}
 */	
+	printf("Ending \n");
 	free(message_red1);
 	free(message_red2);
-	close(sock2_server);
+//	close(sock2_server);
 	close(sock1_server);
 	return 0;
 }

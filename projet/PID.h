@@ -9,17 +9,12 @@
 #define MOTOR_BOTH ( MOTOR_LEFT | MOTOR_RIGHT )
 // Percentage of max speed
 #define SPEED_LINEAR 50
-#define RED_MIN 65
-#define RED_MAX 75
 
 // Initialize the brick. Returns 1 if could'nt initialize 
 int init_brick(void);
 
 // Initialize and search for the color sensor. Set the sensor to the color mode. Returns the correspondent socket
 POOL_T search_set_color_sensor(void);
-
-// Search the large motor. Set the duty cycle sp mode for the motor.
-void search_set_wheels(void);
 
 // Makes de calculus of PID
 // Receives the socket of color sensor.
