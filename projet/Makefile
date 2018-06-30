@@ -37,10 +37,10 @@ endian_test.o: endian_test.c
 
 # ------------------------------------------------
 
-main_client: main_client.o client.o PID.o
+main_client2: main_client2.o client.o PID.o
 	$(CC) $^ $(EV3_LIBS) -o $@
 
-main_client.o: main_client.c client.h PID.h
+main_client2.o: main_client2.c client.h PID.h
 	$(CC) $(CFLAGS) $< -o $@
 
 %.o: %.c %.h
