@@ -95,7 +95,7 @@ void *thread_send_recv(void *message_arg)
 		}
 		pthread_mutex_unlock(&lock);
 		
-		send(message_red->status, (const void *) message_cs, sizeof(message_cs), 0);
+		send(message_red->status, (const void *) message_cs, sizeof(struct message), 0);
 		
 	}
 	free(buffer);
