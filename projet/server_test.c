@@ -24,7 +24,7 @@ int main(void)
 	int data_message[] = {10, 4444};
 	Sockaddr_in address1, address2;
 	char *client1_ip = "192.168.0.104";
-	char *client2_ip = "";
+	char *client2_ip = "192.168.0.104";
 
 	// Client 1 connection ----------------------------------------------
 
@@ -64,9 +64,7 @@ int main(void)
 	else
 		printf("Waiting connection from a client1...\n");	
 
-	// Client 2 connection ----------------------------------
-	
-	// Accept Connection from client 1 ----------------------------------------
+	// Accept connection from client 1 -------------------------------
 	
 	Sockaddr foreignAddr;
 	int cli_len = sizeof(address1);
@@ -78,6 +76,7 @@ int main(void)
 	}
 	printf("Connection with client 1 made\n");
 
+	// Client 2 connection ----------------------------------------------------------	
 
 	// Socket 2 creation
 	if( (sock2_server = socket( AF_INET, SOCK_STREAM, 0)) < 0)
@@ -95,7 +94,7 @@ int main(void)
 
 
 	address2.sin_family = AF_INET;
-	address2.sin_addr.s_addr = INADDR_ANY;
+	address2.sin_addr.s_addr = inet_addr(client2_ip);
 	address2.sin_port = htons(PORT2) ;
 
 	// Bind: Assign adress to the socket
@@ -116,23 +115,7 @@ int main(void)
 		printf("Waiting connection from a client2...\n");	
 
 
-
-	// Accept Connection from client 1 ----------------------------------------
-	
-/*	Sockaddr foreignAddr;
-	int cli_len = sizeof(address1);
-	status1 = accept(sock1_server, (Sockaddr *)&address1, &cli_len);
-	if( status1 < 0 )
-	{
-	  printf("Acceptation failed with status1 %s\n", strerror(errno));
-	  exit(EXIT_FAILURE);
-	}
-	printf("Connection with client 1 made\n");
-*/
-	
-	// Client 1 connection made ----------------------------------------------
-
-		// Accept Connection from client 2 ----------------------------------------
+	// Accept Connection from client 2 ----------------------------------------
 	
 	int cli_len2 = sizeof(address2);
 	status2 = accept(sock2_server, (Sockaddr *)&address2, &cli_len2);

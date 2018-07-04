@@ -1,8 +1,10 @@
 #include "client.h"
 #include "PID.h"
 #include <unistd.h>
-#define RED_MIN 65
-#define RED_MAX 75
+#define RED_MIN 35
+#define RED_MAX 60
+#define YEL_MIN 65
+#define YEL_MAX 85
 
 int main(void)
 {
@@ -17,12 +19,14 @@ int main(void)
 
 // TCP variables -------------------------------------------------------
 	
-	int status, valread, sock_client;
+	int status, valread, sock_client, port;
+	port = PORT;
 	struct message *message_cs;
 	message_cs = (struct message *) malloc(sizeof(struct message));
-	strcpy(message_cs->car_ip, "000.000.0.000");
+	message_cs->port = 0;
 	bool *red_flag;
 	red_flag = (bool *) malloc(sizeof(bool));
+	*red_flag = false;
 
 // ---------------------------------------------------------------------
 
@@ -92,8 +96,11 @@ int main(void)
 // Transfer data code -----------------------------------------------
 
 		if( value0 >= RED_MIN && value0 <= RED_MAX )
+		{
 			*red_flag = true;
-		else
+			printf("RED \n");
+		}
+		if( value0 >= YEL_MIN && value0 <= YEL_MAX )
 			*red_flag = false;
 		
 		// Warn (or not) server if red mark was found (entered on critical section)
@@ -101,11 +108,12 @@ int main(void)
 		
 		// Receive if it's possible to enter on critical section
 		read( sock_client, (void *) message_cs, sizeof(struct message) );
-		printf("%s \n", message_cs->car_ip);	
+
+		printf("%d %d %d\n", message_cs->port, *red_flag, message_cs->flag);	
 		// the car will only stop if there is someone on the critcal section
 		//  AND it's not him (check the adress) AND  just if he arrives 
 		//  on red mark, otherwise he can continue to run
-		if( message_cs->flag == false && *red_flag == true && strcmp(car_ip, message_cs->car_ip) == 0 )
+		if( message_cs->flag == false && *red_flag == true && port == message_cs->port )
 			tacho_stop(MOTOR_BOTH);
 // Transfer data code ending -------------------------------------------------------------
 	

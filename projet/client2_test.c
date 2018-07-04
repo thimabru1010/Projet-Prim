@@ -36,7 +36,7 @@ int main(void)
 	serv_addr.sin_port = htons(PORT);
 
 	// Convert IPv4 and IPv6 to addresses from text to binary
-	if(  inet_pton(AF_INET, "127.0.0.1", &serv_addr.sin_addr) <= 0 )
+	if(  inet_pton(AF_INET, "192.168.0.104", &serv_addr.sin_addr) <= 0 )
 	{
 		printf("\nInvalid address/ Address not supported");
 		return -1;

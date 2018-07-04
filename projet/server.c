@@ -68,7 +68,7 @@ void *thread_send_recv(void *message_arg)
 	struct message  *message_cs;
 	message_cs = (struct message *) malloc(sizeof(struct message));
 	message_cs->flag = true;
-	strcpy(message_cs->car_ip, "000.000.0.000");
+	message_cs->port = 0;
 	bool *buffer;
 	buffer = (bool *) malloc(sizeof(bool));
 	
@@ -85,13 +85,13 @@ void *thread_send_recv(void *message_arg)
 		if( message_red->flag == true && message_cs->flag == true )
 		{
 			message_cs->flag = !message_cs->flag;
-			strcpy(message_cs->car_ip, message_red->car_ip);
+			message_cs->port = message_red->port;
 		}
 		if( message_red->flag == false && message_cs->flag == false )
 		{
 			printf("false \n");
 			message_cs->flag = !message_cs->flag;
-			strcpy(message_cs->car_ip, "000.000.0.000");
+			message_cs->port = 0;
 		}
 		pthread_mutex_unlock(&lock);
 		

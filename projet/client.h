@@ -12,7 +12,7 @@
 struct message
 {
 	bool flag;
-	char car_ip[14];
+	int port;
 	int status;
 };
 
