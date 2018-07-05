@@ -15,7 +15,7 @@ int main(void)
     bool flag;
     char buf[256], *addr, sens_mode[4];
     byte buf2[256], *bin_data;
-    float value0, value1, value2;
+    float value0, value1, value2, sum;
     uint8_t port_inx;
     POOL_T sock_col_sensor;
     printf( "Waiting the EV3 brick online...\n" );
@@ -59,7 +59,6 @@ int main(void)
 	// Shows the port of the socket
     port_inx = socket_to_port( sock_col_sensor );
     printf("Port of socket: %u \n", port_inx );
-    
 	// Loop to make the sensor don't stop
     while(true)
     {
@@ -75,6 +74,8 @@ int main(void)
 			value2 = sensor_get_value2( sock_col_sensor, RGB );
 			printf(" Red: %f	Green: %f	Blue: %f \n", value0, value1,
 			value2);
+			sum = value0 + value1 + value2;
+			printf("Sul: %f \n\n", sum);
 		}
 
 		if( strcmp( sens_mode, "ref" ) == 0 )
@@ -108,12 +109,13 @@ int main(void)
 				printf("Color: blue \n");
 			if( value0 <= 10 & value1 <= 10 & value2 <= 10 )
 				printf("Color: black \n");
-			if( value0 >= 200 & value1 >= 200 & value2 >= 200 )
+/*			if( value0 >= 200 & value1 >= 200 & value2 >= 200 )
 			{
 				printf("Color: white \n");
 				printf("Exiting... \n");
 				return 0;
 			}
+*/
 			Sleep( 4000 );
 		}
 	}

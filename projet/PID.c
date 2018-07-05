@@ -17,8 +17,8 @@ POOL_T search_set_color_sensor(void)
 	sock_col_sensor = sensor_search( LEGO_EV3_COLOR );
     if( sock_col_sensor )
     {
-		if( color_set_mode_col_reflect( sock_col_sensor ) == 1 )
-			printf( "Reflect mode set \n" );
+		if( color_set_mode_rgb_raw( sock_col_sensor ) == 1 )
+			printf( "RGB mode set \n" );
 		return sock_col_sensor;
     }
     else

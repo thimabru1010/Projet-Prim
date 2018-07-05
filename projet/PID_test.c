@@ -13,14 +13,14 @@
 
 int main(void)
 {
-	float value0, target, error = 0, prop, integral = 0, derivate = 0, PID_value;
-	float last_error = 0, kp = 0.45, ki = 0.0008, kd = 0.9;
+	float value0, value1, value2, target, error = 0, prop, integral = 0, derivate = 0, PID_value;
+	float last_error = 0, kp = 0.3, ki = 0.0005, kd = 0.4, sum;
 	int duty_cycle, duty_cycle_sp;
 	bool duty_cycle_flag1, duty_cycle_flag2;
 	POOL_T sock_col_sensor, sock_tacho_motor;
 	
 	// Setting a vlue for the target
-	target = 40;
+	target = 60;
 
 	// Initialize the brick
     printf( "Waiting the EV3 brick online...\n" );
@@ -33,8 +33,8 @@ int main(void)
     sock_col_sensor = sensor_search( LEGO_EV3_COLOR );
     if( sock_col_sensor )
     {
-		if( color_set_mode_col_reflect( sock_col_sensor ) == 1 )
-			printf( "Reflect mode set \n" );
+		if( color_set_mode_rgb_raw( sock_col_sensor ) == 1 )
+			printf( "RGB mode set \n" );
     }
     else
 	   printf("COLOR SENSOR NOT FOUND\n");
@@ -55,14 +55,34 @@ int main(void)
 		perror("tacho_search");
 
 	int cont = 0;
-	float left_motor_speed = 0, right_motor_speed = 0;
+	float left_motor_speed = 0, right_motor_speed = 0, ks = 0.1;
 
 	while(true)
 	{
-		value0 = sensor_get_value0( sock_col_sensor, COLOR_COL_REFLECT);
+		value0 = sensor_get_value0( sock_col_sensor, COLOR_RGB_RAW);
+		value1 = sensor_get_value1( sock_col_sensor, COLOR_RGB_RAW);
+		value2 = sensor_get_value2( sock_col_sensor, COLOR_RGB_RAW);
+		sum = value0 + value1 + value2;
+/*		
+		kd = 1.5;
+		kp = 0.3;
+
+		if( value2 > 180 )
+		{
+			kp = 0.02;
+			kd = 0.5;
+		}
+
+
+		if( value2 > 180 )
+		{
+			kp = 0.02;
+			kd = 0.05;
+		}
+*/
 
 		// Error
-		error = target - value0;
+		error = target - ks*sum;
 
 		// Proportional
 		prop = error;
@@ -87,9 +107,13 @@ int main(void)
 		// Report values
 		if( cont % 4 == 0 )
 		{
-			printf("Value obtained: %.2f \n", value0);
+			printf("RED: %.2f \n", value0);
+			printf("GREEN: %.2f \n", value1);
+			printf("BLUE: %.2f \n", value2);
+			printf("Sum: %.2f \n", ks*sum);
 			printf("cont: %d\n", cont);
 			printf("error: %.2f\n", error);
+			printf("error*kp: %.2f\n", error*kp);
 			printf("integral*ki: %.2f\n", integral*ki);
 			printf("derivate*kd: %.2f\n", derivate*kd);
 			printf("PID value: %.2f\n", PID_value);

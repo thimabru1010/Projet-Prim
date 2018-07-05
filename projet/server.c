@@ -74,6 +74,8 @@ void *thread_send_recv(void *message_arg)
 	
 	pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 	
+	printf("%d \n", message_cs->flag);
+	
 	while(true)
 	{
 		// red_flag = true if the car entered in the cs and false if exited
@@ -86,12 +88,13 @@ void *thread_send_recv(void *message_arg)
 		{
 			message_cs->flag = !message_cs->flag;
 			message_cs->port = message_red->port;
+			printf("%d \n", message_cs->flag);
 		}
 		if( message_red->flag == false && message_cs->flag == false )
 		{
-			printf("false \n");
 			message_cs->flag = !message_cs->flag;
 			message_cs->port = 0;
+			printf("%d \n", message_cs->flag);
 		}
 		pthread_mutex_unlock(&lock);
 		
